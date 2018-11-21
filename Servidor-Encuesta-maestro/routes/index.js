@@ -5,7 +5,7 @@ const sqlite = require('sqlite3').verbose();
 var db;
 const dbFilePath = './db/UserSurvey.db';
 
-//Initialize database connection
+
 function initialize(){
     this.db = new sqlite.Database(dbFilePath, function(err) {
         if(err){
@@ -18,7 +18,6 @@ function initialize(){
 
 }
 
-//Authorize login for admin
 router.post('/authorizeLogin', function(req, res) {
     if(req.body.userName === "admin" && req.body.password === "password"){
         res.sendStatus(200);
@@ -28,7 +27,6 @@ router.post('/authorizeLogin', function(req, res) {
     }
 });
 
-//Get admin portal data from database
 router.get('/getAdminData', function(req, res){
     var sendData = {};
     getTotalSurvey(res, sendData, function(err, res, sendData){
@@ -41,7 +39,7 @@ router.get('/getAdminData', function(req, res){
     });
 });
 
-//Find average age and total survey count
+
 function getTotalSurvey(res, sendData, callBack){
 
     this.db.get('SELECT COUNT(*) as surveyCount, AVG(Age) as averageAge FROM UserSurvey', function(err, row){
@@ -57,7 +55,6 @@ function getTotalSurvey(res, sendData, callBack){
     });
 }
 
-//Now find most popular artist
 function getMostPopularArtist(res, sendData, callBack){
 
     this.db.get('SELECT Artist as mostPopularArtist, MAX(count) as maxCount FROM (' +
@@ -73,7 +70,7 @@ function getMostPopularArtist(res, sendData, callBack){
     });
 }
 
-//Now find least popular artist
+
 function getLeastPopularArtist(res, sendData, callBack){
 
     this.db.get('SELECT Artist as leastPopularArtist, MIN(count) as minCount FROM (' +
@@ -105,7 +102,7 @@ function getMostFrequentRegion(res, sendData, callBack){
     });
 }
 
-//Insert new survey submission data into database
+
 router.post('/sendSurveyData', function(req, res){
 
     this.db.run('INSERT INTO UserSurvey(FirstName, LastName, Age, Region, Artist) VALUES(?, ?, ?, ?, ?)',
@@ -115,7 +112,7 @@ router.post('/sendSurveyData', function(req, res){
                 res.sendStatus(500);
             }
             else{
-                // get the last insert id
+                
                 console.log('A row has been inserted with rowid ' + this.lastID);
                 res.sendStatus(200);
             }
@@ -123,7 +120,7 @@ router.post('/sendSurveyData', function(req, res){
 });
 
 
-// close the database connection
+
 function close(){
 
     this.db.close(function(err){
